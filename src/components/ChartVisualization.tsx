@@ -10,6 +10,10 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  BarController,
+  LineController,
+  ScatterController,
+  PieController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 import { BarChart3, LineChart, PieChart, TrendingUp } from 'lucide-react';
@@ -23,7 +27,11 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  BarController,
+  LineController,
+  ScatterController,
+  PieController
 );
 
 interface ChartData {
