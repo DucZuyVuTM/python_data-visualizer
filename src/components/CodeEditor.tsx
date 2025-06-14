@@ -24,12 +24,25 @@ visualize(x2, y2, 'line', 'Sine Wave')
 `);
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
   const [lineNumbers, setLineNumbers] = useState<number[]>([]);
 
   useEffect(() => {
     const lines = code.split('\n').length;
     setLineNumbers(Array.from({ length: lines }, (_, i) => i + 1));
+    
+    setTimeout(() => {
+      if (textareaRef.current && lineNumbersRef.current) {
+        lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
+      }
+    }, 0);
   }, [code]);
+
+  const handleScroll = () => {
+    if (textareaRef.current && lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = textareaRef.current.scrollTop;
+    }
+  };
 
   const handleRunCode = () => {
     if (code.trim()) {
@@ -116,26 +129,61 @@ visualize(x2, y2, 'line', 'Sine Wave')
         </div>
       </div>
       
-      <div className="relative">
-        <div className="flex">
-          <div className="bg-gray-50 border-r border-gray-200 px-2 py-4 text-sm text-gray-500 font-mono select-none">
+      <div className="relative h-96 flex">
+        {/* Line Numbers */}
+        <div 
+          ref={lineNumbersRef}
+          className="bg-gray-50 border-r border-gray-200 w-16 overflow-hidden flex-shrink-0"
+          style={{ 
+            scrollbarWidth: 'none', 
+            msOverflowStyle: 'none',
+          }}
+        >
+          <div 
+            className="text-sm text-gray-500 font-mono select-none"
+            style={{
+              paddingTop: '16px',
+              paddingBottom: '16px',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              lineHeight: '24px',
+              fontSize: '14px'
+            }}
+          >
             {lineNumbers.map((num) => (
-              <div key={num} className="leading-6 text-right min-w-[2rem]">
+              <div 
+                key={num} 
+                className="text-right"
+                style={{
+                  height: '24px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end'
+                }}
+              >
                 {num}
               </div>
             ))}
           </div>
-          <div className="flex-1">
-            <textarea
-              ref={textareaRef}
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full h-96 p-4 font-mono text-sm text-gray-800 bg-white border-none outline-none resize-none leading-6"
-              placeholder="Write your Python code here..."
-              spellCheck={false}
-            />
-          </div>
+        </div>
+        
+        {/* Code Editor */}
+        <div className="flex-1 relative">
+          <textarea
+            ref={textareaRef}
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            onScroll={handleScroll}
+            onKeyDown={handleKeyDown}
+            className="w-full h-full font-mono text-sm text-gray-800 bg-white border-none outline-none resize-none"
+            placeholder="Write your Python code here..."
+            spellCheck={false}
+            style={{ 
+              padding: '16px',
+              lineHeight: '24px',
+              fontSize: '14px'
+            }}
+          />
         </div>
       </div>
       
