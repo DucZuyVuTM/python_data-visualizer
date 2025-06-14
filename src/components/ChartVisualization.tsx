@@ -66,6 +66,27 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
   const prepareChartData = (data: ChartData) => {
     const colors = generateColors(data.y.length);
     
+    // For scatter plots, we need to format data as {x, y} objects
+    if (data.type === 'scatter') {
+      const scatterData = data.x.map((xVal, index) => ({
+        x: xVal,
+        y: data.y[index]
+      }));
+
+      return {
+        datasets: [{
+          label: data.ylabel || 'Data',
+          data: scatterData,
+          backgroundColor: colors[0] + '80',
+          borderColor: colors[0],
+          borderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        }]
+      };
+    }
+
+    // For other chart types, use the standard format
     const config = {
       labels: data.x,
       datasets: [{
@@ -112,10 +133,17 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
           bodyColor: 'white',
           borderColor: 'rgba(255, 255, 255, 0.1)',
           borderWidth: 1,
+          callbacks: data.type === 'scatter' ? {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            label: function(context: any) {
+              return `${data.xlabel}: ${context.parsed.x}, ${data.ylabel}: ${context.parsed.y}`;
+            }
+          } : {}
         }
       },
       scales: data.type !== 'pie' ? {
         x: {
+          type: data.type === 'scatter' ? 'linear' : 'category',
           title: {
             display: true,
             text: data.xlabel,
@@ -144,13 +172,28 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
       } : {},
       elements: {
         point: {
-          radius: data.type === 'line' ? 3 : 0,
-          hoverRadius: data.type === 'line' ? 6 : 0,
+          radius: data.type === 'line' ? 3 : data.type === 'scatter' ? 4 : 0,
+          hoverRadius: data.type === 'line' ? 6 : data.type === 'scatter' ? 8 : 0,
         }
       }
     };
 
     return baseOptions;
+  };
+
+  // Map chart types to Chart.js types
+  const getChartType = (type: string) => {
+    switch (type) {
+      case 'scatter':
+        return 'scatter';
+      case 'line':
+        return 'line';
+      case 'pie':
+        return 'pie';
+      case 'bar':
+      default:
+        return 'bar';
+    }
   };
 
   if (!chartData || chartData.x.length === 0) {
@@ -188,7 +231,7 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
           <Chart
             ref={chartRef}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            type={chartData.type as any}
+            type={getChartType(chartData.type) as any}
             data={prepareChartData(chartData)}
             options={getChartOptions(chartData)}
           />

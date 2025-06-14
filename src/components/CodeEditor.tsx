@@ -62,6 +62,7 @@ visualize(x2, y2, 'line', 'Sine Wave')
 
   const copyCode = () => {
     navigator.clipboard.writeText(code);
+    alert("Code copied to clipboard.");
   };
 
   const clearCode = () => {
@@ -82,24 +83,24 @@ visualize(x2, y2, 'line', 'Sine Wave')
     <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
       <div className="bg-gray-50 border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">Python Code Editor</h3>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-1 justify-end">
           <button
             onClick={copyCode}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
             <Copy className="w-4 h-4" />
             <span>Copy</span>
           </button>
           <button
             onClick={clearCode}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             <span>Clear</span>
           </button>
           <button
             onClick={downloadCode}
-            className="flex items-center space-x-1 px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
             <Download className="w-4 h-4" />
             <span>Download</span>
@@ -107,7 +108,7 @@ visualize(x2, y2, 'line', 'Sine Wave')
           <button
             onClick={handleRunCode}
             disabled={isLoading}
-            className="flex items-center space-x-2 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors"
+            className="flex items-center px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors"
           >
             <Play className="w-4 h-4" />
             <span>{isLoading ? 'Running...' : 'Run Code'}</span>
