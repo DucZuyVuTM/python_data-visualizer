@@ -35,7 +35,7 @@ ChartJS.register(
 );
 
 interface ChartData {
-  x: [];
+  x: (string | number)[];
   y: number[];
   type: string;
   title: string;
@@ -74,10 +74,10 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
   const prepareChartData = (data: ChartData) => {
     const colors = generateColors(data.y.length);
     
-    // For scatter plots, we need to format data as {x, y} objects
+    // For scatter plots, format data as {x, y} objects
     if (data.type === 'scatter') {
       const scatterData = data.x.map((xVal, index) => ({
-        x: xVal,
+        x: xVal, // Giữ nguyên xVal (số hoặc chuỗi)
         y: data.y[index]
       }));
 
@@ -90,6 +90,7 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
           borderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6,
+          showLine: false,
         }]
       };
     }
@@ -112,6 +113,9 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
   };
 
   const getChartOptions = (data: ChartData) => {
+    // Kiểm tra xem tất cả giá trị x có phải là số không
+    const isNumericX = data.x.every(x => typeof x === 'number' && !isNaN(x));
+
     const baseOptions = {
       responsive: true,
       maintainAspectRatio: false,
@@ -151,7 +155,7 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
       },
       scales: data.type !== 'pie' ? {
         x: {
-          type: data.type === 'scatter' ? 'linear' : 'category',
+          type: data.type === 'scatter' && isNumericX ? 'linear' : 'category',
           title: {
             display: true,
             text: data.xlabel,
