@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,7 +16,7 @@ import {
   PieController,
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
-import { BarChart3, LineChart, PieChart, TrendingUp } from 'lucide-react';
+import { BarChart3, LineChart, PieChart, TrendingUp, Download } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -48,7 +48,9 @@ interface ChartVisualizationProps {
 }
 
 const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) => {
-  const chartRef = useRef(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const chartRef = useRef<any>(null); // Use any to avoid TypeScript errors with Chart.js
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const getChartIcon = (type: string) => {
     switch (type) {
@@ -77,7 +79,7 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
     // For scatter plots, format data as {x, y} objects
     if (data.type === 'scatter') {
       const scatterData = data.x.map((xVal, index) => ({
-        x: xVal, // Giữ nguyên xVal (số hoặc chuỗi)
+        x: xVal, // Keep xVal (number or string)
         y: data.y[index]
       }));
 
@@ -208,6 +210,19 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
     }
   };
 
+  const downloadChart = () => {
+    if (chartRef.current) {
+      setIsDownloading(true);
+      const link = document.createElement('a');
+      link.download = `${chartData?.title || 'chart'}.png`;
+      link.href = chartRef.current.toBase64Image();
+      link.click();
+      setTimeout(() => {
+        setIsDownloading(false);
+      }, 500);
+    }
+  };
+
   if (!chartData || chartData.x.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
@@ -248,6 +263,15 @@ const ChartVisualization: React.FC<ChartVisualizationProps> = ({ chartData }) =>
             options={getChartOptions(chartData)}
           />
         </div>
+        
+        <button
+          onClick={downloadChart}
+          className="flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors mx-auto mt-2"
+          disabled={isDownloading}
+        >
+          <Download className="w-4 h-4 mr-1" />
+          <span>{isDownloading ? 'Downloading...' : 'Download'}</span>
+        </button>
       </div>
     </div>
   );

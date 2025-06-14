@@ -99,31 +99,31 @@ visualize(x2, y2, 'line', 'Sine Wave')
         <div className="flex flex-wrap items-center gap-1 justify-end">
           <button
             onClick={copyCode}
-            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-2 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
-            <Copy className="w-4 h-4" />
+            <Copy className="w-4 h-4 mr-1" />
             <span>Copy</span>
           </button>
           <button
             onClick={clearCode}
-            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-2 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-4 h-4 mr-1" />
             <span>Clear</span>
           </button>
           <button
             onClick={downloadCode}
-            className="flex items-center px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            className="flex items-center px-2 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-4 h-4 mr-1" />
             <span>Download</span>
           </button>
           <button
             onClick={handleRunCode}
             disabled={isLoading}
-            className="flex items-center px-4 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors"
+            className="flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors"
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-4 h-4 mr-1" />
             <span>{isLoading ? 'Running...' : 'Run Code'}</span>
           </button>
         </div>
